@@ -207,21 +207,21 @@ class Navigator:
 
     def goto(self, dst='/'):
         board, page, thread = self.parse_dest(dst)
-        print(board, page, thread)
+        #print(board, page, thread)
         if dst == 'q':
-            return 0
+            return None
         else:
             if board:
                 if thread:
-                    th = Thread(board, thread)
-                    th.cout()
+                    gist = Thread(board, thread)
+                    #th.cout()
                 else:
-                    bd = Board(board)
-                    bd.cout(page)
+                    gist = Board(board)
+                    #bd.cout(page)
             else:
-                mp = MainPage()
-                mp.cout()
-            return 1
+                gist = MainPage()
+                #mp.cout()
+            return gist
 
     def parse_dest(self, dst):
         board = page = thread = None
@@ -236,8 +236,15 @@ class Navigator:
 
     def run_nav(self):
         dst = '/'
-        while self.goto(dst) != 0:
+        curr_gist = self.goto(dst)
+        while curr_gist:
+            _, page, _ = self.parse_dest(dst)
+            try:
+                curr_gist.cout(page)
+            except TypeError:
+                curr_gist.cout()
             dst = input('> ')
+            curr_gist = self.goto(dst)
 
 
 if __name__ == '__main__':
